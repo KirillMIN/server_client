@@ -18,10 +18,6 @@ class TestServer(unittest.TestCase):
         self.assertEqual(process_client_message(
             {ACTION: 'Play', TIME: '1.1', USER: {ACCOUNT_NAME: 'Guest'}}), self.err_dict)
 
-    def test_unknown_user(self):
-        self.assertEqual(process_client_message(
-            {ACTION: PRESENCE, TIME: 1.1, USER: {ACCOUNT_NAME: None}}), self.err_dict)
-
     def test_ok_check(self):
         self.assertEqual(process_client_message(
             {ACTION: PRESENCE, TIME: 1.1, USER: {ACCOUNT_NAME: 'Guest'}}), self.ok_dict)
