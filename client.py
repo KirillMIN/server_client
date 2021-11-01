@@ -12,7 +12,6 @@ def create_presence(account_name='Guest'):
         ACTION: PRESENCE,
         TIME: time.time(),
         USER: {ACCOUNT_NAME: account_name}
-
     }
     return out
 
