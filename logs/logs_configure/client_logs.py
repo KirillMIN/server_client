@@ -9,7 +9,6 @@ stream_handler.setLevel(logging.DEBUG)
 logger = logging.getLogger('client')
 logger.addHandler(stream_handler)
 logger.setLevel(logging.DEBUG)
-
 if __name__ == '__main__':
     logger.critical('критическая ошибка')
     logger.error('ошибка')
