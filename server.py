@@ -4,7 +4,8 @@ import json
 from common.variables import ACTION, ACCOUNT_NAME, RESPONSE, MAX_MASSAGE_LEN, \
     PRESENCE, TIME, USER, ERROR, DEFAULT_PORT, MAX_DEQUE
 from common.utils import get_message, send_message
-
+import logging
+import logs.logs_configure.server_logs
 """
 def create_presence(account_name='Guest'):
     out = {
@@ -15,13 +16,16 @@ def create_presence(account_name='Guest'):
     }
     return out
 """
+server_logger = logging.getLogger('server')
 
 
 def process_client_message(message):
     if ACTION in message and message[ACTION] == PRESENCE and TIME in message and USER in message \
             and message[USER][ACCOUNT_NAME] is not None:
+        server_logger.info('сообщение подходит')
         return {RESPONSE: 200}
     else:
+        server_logger.error('сообщение не содержит полностью нужной информации')
         return {RESPONSE: 400}
 
 
@@ -32,6 +36,7 @@ def main():
         else:
             listen_port = DEFAULT_PORT
         if listen_port < 1024 or listen_port > 65535:
+            server_logger.critical('номер порта не соотвествует правилам')
             raise ValueError
     except IndexError:
         print('После параметра -\'p\' необходимо указать номер порта.')
@@ -61,16 +66,21 @@ def main():
     # Слушаем порт
 
     transport.listen(MAX_DEQUE)
-
+    server_logger.info('сервер готов к получение сокета')
     while True:
         client, client_address = transport.accept()  # принятие запроса на соединение
+        server_logger.info(f'сервер принял соединение с {client_address}')
         try:
             message_from_client = get_message(client)  # получение сообщения
+            server_logger.info(f'сервер принял сообщение {client_address}')
             print(message_from_client)
             response = process_client_message(message_from_client)  # проверка и ответ пользователю
             send_message(client, response)
+            server_logger.info(f'сервер отправил сообщение {client_address}')
             client.close()
+            server_logger.info(f'сервер закрыл соединение c {client_address}')
         except (ValueError, json.JSONDecodeError):
+            server_logger.info(f'Принято некорретное сообщение от клиента {client_address}.')
             print('Принято некорретное сообщение от клиента.')
             client.close()
 
