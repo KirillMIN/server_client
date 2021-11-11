@@ -1,6 +1,7 @@
 import socket
 import sys
 import json
+from tests.decorate import log1
 from common.variables import ACTION, ACCOUNT_NAME, RESPONSE, MAX_MASSAGE_LEN, \
     PRESENCE, TIME, USER, ERROR, DEFAULT_PORT, MAX_DEQUE
 from common.utils import get_message, send_message
@@ -19,6 +20,7 @@ def create_presence(account_name='Guest'):
 server_logger = logging.getLogger('server')
 
 
+@log1
 def process_client_message(message):
     if ACTION in message and message[ACTION] == PRESENCE and TIME in message and USER in message \
             and message[USER][ACCOUNT_NAME] is not None:

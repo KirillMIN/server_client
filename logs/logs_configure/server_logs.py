@@ -4,7 +4,7 @@ from logging import handlers
 p_path = os.path.abspath(__file__).split('\\')[:-2]
 p_path.append('logs_files')
 p_path = '\\'.join(p_path)
-p_path = os.path.join(p_path, 'server.log')
+p_path = os.path.join(p_path, 'servers.log')
 server_format = logging.Formatter("%(levelname)-10s %(asctime)s %(module)s %(message)s %(funcName)s")
 stream_handler = logging.StreamHandler()
 stream_handler.setFormatter(server_format)
