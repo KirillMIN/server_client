@@ -1,90 +1,117 @@
+"""Программа-сервер"""
+
 import socket
 import sys
-import json
-from tests.decorate import log1
-from common.variables import ACTION, ACCOUNT_NAME, RESPONSE, MAX_MASSAGE_LEN, \
-    PRESENCE, TIME, USER, ERROR, DEFAULT_PORT, MAX_DEQUE
-from common.utils import get_message, send_message
+import argparse
 import logging
+import select
+import time
 import logs.logs_configure.server_logs
-"""
-def create_presence(account_name='Guest'):
-    out = {
-        ACTION: PRESENCE,
-        TIME: time.time(),
-        USER: {ACCOUNT_NAME: account_name}
+from common.variables import DEFAULT_PORT, MAX_CONNECTIONS, ACTION, TIME, USER, \
+    ACCOUNT_NAME, SENDER, PRESENCE, RESPONSE, ERROR, MESSAGE, MESSAGE_TEXT
+from common.utils import get_message, send_message
+from tests.decorate import log1
 
-    }
-    return out
-"""
-server_logger = logging.getLogger('server')
+
+LOGGER = logging.getLogger('server')
 
 
 @log1
-def process_client_message(message):
-    if ACTION in message and message[ACTION] == PRESENCE and TIME in message and USER in message \
-            and message[USER][ACCOUNT_NAME] is not None:
-        server_logger.info('сообщение подходит')
-        return {RESPONSE: 200}
+def process_client_message(message, messages_list, client):
+    LOGGER.debug(f'Разбор сообщения от клиента : {message}')
+    if ACTION in message and message[ACTION] == PRESENCE and TIME in message \
+            and USER in message and message[USER][ACCOUNT_NAME] == 'Guest':
+        send_message(client, {RESPONSE: 200})
+        return
+    elif ACTION in message and message[ACTION] == MESSAGE and \
+            TIME in message and MESSAGE_TEXT in message:
+        messages_list.append((message[ACCOUNT_NAME], message[MESSAGE_TEXT]))
+        return
     else:
-        server_logger.error('сообщение не содержит полностью нужной информации')
-        return {RESPONSE: 400}
+        send_message(client, {
+            RESPONSE: 400,
+            ERROR: 'Bad Request'
+        })
+        return
+
+
+@log1
+def arg_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-p', default=DEFAULT_PORT, type=int, nargs='?')
+    parser.add_argument('-a', default='', nargs='?')
+    namespace = parser.parse_args(sys.argv[1:])
+    listen_address = namespace.a
+    listen_port = namespace.p
+
+    # проверка получения корретного номера порта для работы сервера.
+    if not 1023 < listen_port < 65536:
+        LOGGER.critical(
+            f'Попытка запуска сервера с указанием неподходящего порта '
+            f'{listen_port}. Допустимы адреса с 1024 до 65535.')
+        sys.exit(1)
+
+    return listen_address, listen_port
 
 
 def main():
-    try:
-        if '-p' in sys.argv:
-            listen_port = int(sys.argv[sys.argv.index('-p') + 1])
-        else:
-            listen_port = DEFAULT_PORT
-        if listen_port < 1024 or listen_port > 65535:
-            server_logger.critical('номер порта не соотвествует правилам')
-            raise ValueError
-    except IndexError:
-        print('После параметра -\'p\' необходимо указать номер порта.')
-        sys.exit(1)
-    except ValueError:
-        print(
-            'В качастве порта может быть указано только число в диапазоне от 1024 до 65535.')
-        sys.exit(1)
+    listen_address, listen_port = arg_parser()
 
-    try:
-        if '-a' in sys.argv:
-            listen_address = sys.argv[sys.argv.index('-a') + 1]
-        else:
-            listen_address = ''
+    LOGGER.info(
+        f'Запущен сервер, порт для подключений: {listen_port}, '
+        f'адрес с которого принимаются подключения: {listen_address}. '
+        f'Если адрес не указан, принимаются соединения с любых адресов.')
 
-    except IndexError:
-        print(
-            'После параметра \'a\'- необходимо указать адрес, который будет слушать сервер.')
-        sys.exit(1)
+    transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    transport.bind((listen_address, listen_port))
+    transport.settimeout(0.5)
 
-    # Готовим сокет
+    clients = []
+    messages = []
 
-    transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # socket.SOCK_STREAM - Создает сокет TCP,
-    # socket.AF_INET - создаваемый сокет будет сетевым
-    transport.bind((listen_address, listen_port))  # Присваивает порт listen_port
-
-    # Слушаем порт
-
-    transport.listen(MAX_DEQUE)
-    server_logger.info('сервер готов к получение сокета')
+    transport.listen(MAX_CONNECTIONS)
     while True:
-        client, client_address = transport.accept()  # принятие запроса на соединение
-        server_logger.info(f'сервер принял соединение с {client_address}')
         try:
-            message_from_client = get_message(client)  # получение сообщения
-            server_logger.info(f'сервер принял сообщение {client_address}')
-            print(message_from_client)
-            response = process_client_message(message_from_client)  # проверка и ответ пользователю
-            send_message(client, response)
-            server_logger.info(f'сервер отправил сообщение {client_address}')
-            client.close()
-            server_logger.info(f'сервер закрыл соединение c {client_address}')
-        except (ValueError, json.JSONDecodeError):
-            server_logger.info(f'Принято некорретное сообщение от клиента {client_address}.')
-            print('Принято некорретное сообщение от клиента.')
-            client.close()
+            client, client_address = transport.accept()
+        except OSError:
+            pass
+        else:
+            LOGGER.info(f'Установлено соедение с ПК {client_address}')
+            clients.append(client)
+
+        recv_data_lst = []
+        send_data_lst = []
+        err_lst = []
+        try:
+            if clients:
+                recv_data_lst, send_data_lst, err_lst = select.select(clients, clients, [], 0)
+        except OSError:
+            pass
+
+        if recv_data_lst:
+            for client_with_message in recv_data_lst:
+                try:
+                    process_client_message(get_message(client_with_message),
+                                           messages, client_with_message)
+                except:
+                    LOGGER.info(f'Клиент {client_with_message.getpeername()} '
+                                f'отключился от сервера.')
+                    clients.remove(client_with_message)
+
+        if messages and send_data_lst:
+            message = {
+                ACTION: MESSAGE,
+                SENDER: messages[0][0],
+                TIME: time.time(),
+                MESSAGE_TEXT: messages[0][1]
+            }
+            del messages[0]
+            for waiting_client in send_data_lst:
+                try:
+                    send_message(waiting_client, message)
+                except:
+                    LOGGER.info(f'Клиент {waiting_client.getpeername()} отключился от сервера.')
+                    clients.remove(waiting_client)
 
 
 if __name__ == '__main__':

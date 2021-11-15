@@ -1,20 +1,23 @@
-from common.variables import *
 import json
+import sys
+from common.variables import MAX_PACKAGE_LENGTH, ENCODING
+sys.path.append('../')
 
 
 def get_message(client):
-    response = client.recv(MAX_MASSAGE_LEN)
-    if isinstance(response, bytes):
-        json_response = response.decode(ENCODING)
+    encoded_response = client.recv(MAX_PACKAGE_LENGTH)
+    if isinstance(encoded_response, bytes):
+        json_response = encoded_response.decode(ENCODING)
         response = json.loads(json_response)
-        print(type(response))
         if isinstance(response, dict):
-            print(response)
             return response
-        raise ValueError
-    raise ValueError
+        raise Exception
+    raise Exception
 
 
 def send_message(sock, message):
-    jet_message = json.dumps(message).encode()
-    sock.send(jet_message)
+    if not isinstance(message, dict):
+        raise Exception
+    js_message = json.dumps(message)
+    encoded_message = js_message.encode(ENCODING)
+    sock.send(encoded_message)
