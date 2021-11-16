@@ -153,3 +153,47 @@ INFO       2021-11-16 00:34:08,262 server Клиент ('127.0.0.1', 63090) от
 INFO       2021-11-16 00:34:10,785 server Клиент ('127.0.0.1', 63089) отключился от сервера. main
 INFO       2021-11-16 00:34:11,800 server Клиент ('127.0.0.1', 63091) отключился от сервера. main
 INFO       2021-11-16 00:34:12,313 server Клиент ('127.0.0.1', 63092) отключился от сервера. main
+DEBUG      2021-11-16 00:36:09,372 server функция arg_parser, ее аргументы (), {} 
+модуль из которой вызвана исходная функция __main__ 
+функция из которой вызвана исходная функция main main
+INFO       2021-11-16 00:36:09,372 server Запущен сервер, порт для подключений: 7777, адрес с которого принимаются подключения: . Если адрес не указан, принимаются соединения с любых адресов. main
+INFO       2021-11-16 00:36:09,865 server Установлено соедение с ПК ('127.0.0.1', 63111) main
+DEBUG      2021-11-16 00:36:09,866 server Разбор сообщения от клиента : {'action': 'presence', 'time': 1637012169.8658159, 'user': {'account_name': 'Guest'}} process_client_message
+DEBUG      2021-11-16 00:36:09,868 server функция process_client_message, ее аргументы ({'action': 'presence', 'time': 1637012169.8658159, 'user': {'account_name': 'Guest'}}, [], <socket.socket fd=448, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 63111)>), {} 
+модуль из которой вызвана исходная функция __main__ 
+функция из которой вызвана исходная функция main main
+INFO       2021-11-16 00:36:09,869 server Установлено соедение с ПК ('127.0.0.1', 63113) main
+DEBUG      2021-11-16 00:36:09,869 server Разбор сообщения от клиента : {'action': 'presence', 'time': 1637012169.8658159, 'user': {'account_name': 'Guest'}} process_client_message
+DEBUG      2021-11-16 00:36:09,871 server функция process_client_message, ее аргументы ({'action': 'presence', 'time': 1637012169.8658159, 'user': {'account_name': 'Guest'}}, [], <socket.socket fd=384, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 63113)>), {} 
+модуль из которой вызвана исходная функция __main__ 
+функция из которой вызвана исходная функция main main
+INFO       2021-11-16 00:36:09,872 server Установлено соедение с ПК ('127.0.0.1', 63112) main
+DEBUG      2021-11-16 00:36:09,872 server Разбор сообщения от клиента : {'action': 'presence', 'time': 1637012169.8658159, 'user': {'account_name': 'Guest'}} process_client_message
+DEBUG      2021-11-16 00:36:09,874 server функция process_client_message, ее аргументы ({'action': 'presence', 'time': 1637012169.8658159, 'user': {'account_name': 'Guest'}}, [], <socket.socket fd=380, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 63112)>), {} 
+модуль из которой вызвана исходная функция __main__ 
+функция из которой вызвана исходная функция main main
+INFO       2021-11-16 00:36:09,875 server Установлено соедение с ПК ('127.0.0.1', 63116) main
+DEBUG      2021-11-16 00:36:09,875 server Разбор сообщения от клиента : {'action': 'presence', 'time': 1637012169.8658159, 'user': {'account_name': 'Guest'}} process_client_message
+DEBUG      2021-11-16 00:36:09,877 server функция process_client_message, ее аргументы ({'action': 'presence', 'time': 1637012169.8658159, 'user': {'account_name': 'Guest'}}, [], <socket.socket fd=388, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 63116)>), {} 
+модуль из которой вызвана исходная функция __main__ 
+функция из которой вызвана исходная функция main main
+INFO       2021-11-16 00:36:09,877 server Установлено соедение с ПК ('127.0.0.1', 63110) main
+DEBUG      2021-11-16 00:36:09,878 server Разбор сообщения от клиента : {'action': 'presence', 'time': 1637012169.8658159, 'user': {'account_name': 'Guest'}} process_client_message
+DEBUG      2021-11-16 00:36:09,879 server функция process_client_message, ее аргументы ({'action': 'presence', 'time': 1637012169.8658159, 'user': {'account_name': 'Guest'}}, [], <socket.socket fd=344, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 63110)>), {} 
+модуль из которой вызвана исходная функция __main__ 
+функция из которой вызвана исходная функция main main
+INFO       2021-11-16 00:36:10,377 server Установлено соедение с ПК ('127.0.0.1', 63115) main
+DEBUG      2021-11-16 00:36:10,379 server Разбор сообщения от клиента : {'action': 'presence', 'time': 1637012170.377028, 'user': {'account_name': 'Guest'}} process_client_message
+DEBUG      2021-11-16 00:36:10,383 server функция process_client_message, ее аргументы ({'action': 'presence', 'time': 1637012170.377028, 'user': {'account_name': 'Guest'}}, [], <socket.socket fd=432, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 63115)>), {} 
+модуль из которой вызвана исходная функция __main__ 
+функция из которой вызвана исходная функция main main
+INFO       2021-11-16 00:36:10,384 server Установлено соедение с ПК ('127.0.0.1', 63114) main
+DEBUG      2021-11-16 00:36:10,386 server Разбор сообщения от клиента : {'action': 'presence', 'time': 1637012170.377028, 'user': {'account_name': 'Guest'}} process_client_message
+DEBUG      2021-11-16 00:36:10,391 server функция process_client_message, ее аргументы ({'action': 'presence', 'time': 1637012170.377028, 'user': {'account_name': 'Guest'}}, [], <socket.socket fd=352, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 63114)>), {} 
+модуль из которой вызвана исходная функция __main__ 
+функция из которой вызвана исходная функция main main
+INFO       2021-11-16 00:36:13,946 server Клиент ('127.0.0.1', 63111) отключился от сервера. main
+INFO       2021-11-16 00:36:14,461 server Клиент ('127.0.0.1', 63110) отключился от сервера. main
+INFO       2021-11-16 00:36:14,976 server Клиент ('127.0.0.1', 63116) отключился от сервера. main
+INFO       2021-11-16 00:36:16,004 server Клиент ('127.0.0.1', 63112) отключился от сервера. main
+INFO       2021-11-16 00:36:16,005 server Клиент ('127.0.0.1', 63114) отключился от сервера. main

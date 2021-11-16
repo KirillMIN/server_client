@@ -1,4 +1,4 @@
-"""Программа-сервер"""
+
 
 import socket
 import sys
@@ -44,7 +44,6 @@ def arg_parser():
     listen_address = namespace.a
     listen_port = namespace.p
 
-    # проверка получения корретного номера порта для работы сервера.
     if not 1023 < listen_port < 65536:
         LOGGER.critical(
             f'Попытка запуска сервера с указанием неподходящего порта '

@@ -1,4 +1,4 @@
-"""Программа-клиент"""
+
 
 import sys
 import json
